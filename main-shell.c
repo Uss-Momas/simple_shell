@@ -12,7 +12,7 @@
   * @av: the arguments array
   * Return: 0 for success, -1 on failure;
   */
-int main(int ac __attribute__((unused)), char **av __attribute__((unused)))
+int main(int ac __attribute__((unused)), char **av)
 {
 	char *line = NULL, **tokens = NULL;
 	size_t size = 0;
@@ -35,7 +35,7 @@ int main(int ac __attribute__((unused)), char **av __attribute__((unused)))
 		{
 			val = execve(tokens[0], tokens, environ);
 			if (val == -1)
-				perror("Error");
+				perror(av[0]);
 		}
 		else
 		{
