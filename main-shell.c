@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <string.h>
 
-extern char **environ;
 /**
   * main - entry point of our program
   * @ac: the number of arguments of the program
