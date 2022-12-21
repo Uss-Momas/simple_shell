@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+
+extern char **environ;
 /**
   * main - entry point of our program
   * @ac: the number of arguments of the program
@@ -13,15 +15,15 @@
   */
 int main(int ac __attribute__((unused)), char **av __attribute__((unused)))
 {
-	char *line = NULL, *token, **tokens = NULL;
+	char *line = NULL, **tokens = NULL;
 	size_t size = 0;
-	int len_read, val;
+	int val;
 	pid_t pid;
 
 	while (1)
 	{
 		printf("$ ");
-		len_read = getline(&line, &size, stdin);
+		getline(&line, &size, stdin);
 		tokens = fillArguments(line);
 		if (tokens == NULL)
 			return (-1);
@@ -32,7 +34,7 @@ int main(int ac __attribute__((unused)), char **av __attribute__((unused)))
 
 		if (pid == 0)
 		{
-			val = execve(tokens[0], tokens, NULL);
+			val = execve(tokens[0], tokens, environ);
 			if (val == -1)
 				perror("Error");
 		}
@@ -65,12 +67,13 @@ char **fillArguments(char *line)
 	}
 
 	token = strtok(line, " ");
-
-	for (i = 0; token != NULL; i++)
+	while (token != NULL)
 	{
-		 tokens[i] = token;
-		 token = strtok(NULL, " ");
+		tokens[i] = token;
+		token = strtok(NULL, " ");
+		i++;
 	}
+
 	while (tokens[i - 1][j] != '\n')
 		j++;
 	tokens[i - 1][j] = '\0';
